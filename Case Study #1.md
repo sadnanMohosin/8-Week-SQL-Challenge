@@ -55,3 +55,14 @@ SELECT customer_id, product_name
 FROM purchase_order
 WHERE order_rank = 1
 GROUP BY customer_id, product_name;
+```
+
+```sql
+--4.What is the most purchased item on the menu and how many times was it purchased by all customers?
+select product_name, 
+          count(s.product_id) as total_purchase
+from dannys_diner.sales s
+left join dannys_diner.menu m on m.product_id = s.product_id
+group by product_name
+order by 2 desc;
+```
