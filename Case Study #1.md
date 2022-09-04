@@ -66,3 +66,26 @@ left join dannys_diner.menu m on m.product_id = s.product_id
 group by product_name
 order by 2 desc;
 ```
+~~~sql
+--5.Which item(s) was the most popular for each customer?
+WITH customer_cte AS (
+  SELECT
+    sales.customer_id,
+    menu.product_name,
+    COUNT(sales.*) AS item_quantity,
+    DENSE_RANK() OVER (
+      PARTITION BY sales.customer_id
+      ORDER BY COUNT(sales.*) DESC
+    ) AS item_rank
+  FROM dannys_diner.sales
+  INNER JOIN dannys_diner.menu ON menu.product_id = sales.product_id
+  GROUP BY
+    sales.customer_id,menu.product_name
+)
+SELECT
+  customer_id,
+  product_name,
+  item_quantity
+FROM customer_cte
+WHERE item_rank = 1;
+~~~
